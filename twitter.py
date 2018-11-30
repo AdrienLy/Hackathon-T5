@@ -12,6 +12,8 @@ from requests_oauthlib import OAuth1
 from urllib.parse import parse_qs
 import os
 import pandas as pd
+from datetime import datetime
+import re
 
 REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
 AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize?oauth_token="
@@ -74,49 +76,66 @@ def get_artist_twitter_id(name_to_look_for):
     Get artist twitter ID (request) with string name as input
     """
     # Search request
-    r2 = requests.get(url = 'https://api.twitter.com/1.1/users/search.json?q='+ name_to_look_for, auth=oauth)
-    r2 = r2.json()[0:2]
-    artist_id = ''
-    for result in r2:
-        if result['verified'] == True:
-            artist_id = result['id_str']
-            return artist_id, result['statuses_count']
-        break
-    return '',0
+    name = re.sub("\W"," ", name_to_look_for)
+    r2 = requests.get(url = 'https://api.twitter.com/1.1/users/search.json?q='+ name, auth=oauth)
+    if r2.status_code != 200:
+        return '',0
+    else:
+        if len(r2.json()) < 2:  
+            return '',0
+        else:
+            r2 = r2.json()[0:2]
+            artist_id = ''
+            for result in r2:
+                if result['verified'] == True:
+                    artist_id = result['id_str']
+                    return artist_id, result['statuses_count']
+                break
+            return '',0
     
-
 if __name__ == "__main__":
+    
+    date_format = '%a %b %d %H:%M:%S +0000 %Y'
+    
     if not OAUTH_TOKEN:
         token, secret = setup_oauth()
         print ("OAUTH_TOKEN: " + token)
         print ("OAUTH_TOKEN_SECRET: " + secret)
     else:
-        col_names = ['artiste','has_tweet', 'followers' , 'fav' , 'retweet', 'nbre tweet']
+        col_names = ['artiste','has_tweet', 'followers' , 'fav' , 'retweet', 'nbre tweet', 'tweet_freq']
         results_df = pd.DataFrame(columns=col_names)
         oauth = get_oauth()
-        artists = pd.read_csv('Billboard/billboard_hot_200_2000-01.csv')[' Artist']
+        artists = pd.read_csv('top_artist_billboard_2015-2019', header=None)[0]
         for art in artists:
             artist_id, tweet_count = get_artist_twitter_id(art)
             if artist_id != '':
                 r = requests.get(url="https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=" + artist_id + "&count=200&include_rts=false", auth=oauth)
                 timeline = r.json()
-                followers_number = timeline[0]['user']['followers_count']
-                tweet_total = 1
-                retweet_number = []
-                favorite_number = []
-                date = []
-                for tweet in timeline:
-                    # About a post
-                    date.append(tweet['created_at'])
-                    retweet_number.append(tweet['retweet_count'])
-                    favorite_number.append(tweet['favorite_count'])
-                retweet_total = sum(retweet_number)
-                favorite_total = sum(favorite_number)
-                has_twitter_account = True
-                art_results = pd.DataFrame([[str(art), has_twitter_account, followers_number, favorite_total, retweet_total, tweet_count]], columns=col_names)
+                if len(timeline) > 0:
+                    followers_number = timeline[0]['user']['followers_count']
+                    tweet_total = 1
+                    retweet_number = []
+                    favorite_number = []
+                    date = []
+                    for tweet in timeline:
+                        # About a post
+                        date.append(datetime.strptime(tweet['created_at'], date_format))
+                        retweet_number.append(tweet['retweet_count'])
+                        favorite_number.append(tweet['favorite_count'])
+                    date_df = pd.DataFrame(date)
+                    date_df[0] =  pd.to_datetime(date_df[0])
+                    diff_date = date_df[0][-1:] - date_df[0][0]
+                    moyenne_hebd = len(timeline) * 7 / abs(diff_date.iloc[0].days)
+                    retweet_total = sum(retweet_number)
+                    favorite_total = sum(favorite_number)
+                    has_twitter_account = True
+                    art_results = pd.DataFrame([[str(art), has_twitter_account, followers_number, favorite_total, retweet_total, tweet_count, moyenne_hebd]], columns=col_names)
+                else:
+                    art_results = pd.DataFrame([[str(art), False, 0, 0, 0, 0, 0]], columns=col_names)
             else:
-                art_results = pd.DataFrame([[str(art), False, 0, 0, 0, 0]], columns=col_names)
-
+                art_results = pd.DataFrame([[str(art), False, 0, 0, 0, 0, 0]], columns=col_names)
             results_df = results_df.append(art_results, ignore_index = True)
 
+    y = pd.read_csv('top_artist_billboard_2015-2019', header = None )[1]
+    df_concat = pd.concat([results_df, y], axis = 1)    
     
