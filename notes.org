@@ -17,7 +17,7 @@ Definition variable à expliquer
 
 * Olivier
   
-- MusicBrainz https://musicbrainz.org/
+- MusicBrainz: https://musicbrainz.org/
 - etat de l'art
 
 * Adrien
