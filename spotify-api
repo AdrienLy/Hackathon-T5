@@ -1,0 +1,10 @@
+POST https://accounts.spotify.com/api/token/
+grant_type: client_credentials
+Authorization: Basic d3a10db541914f98b892c31f9c2b54cb:d51a0c783d7a41b9860b30d447eb9b39
+
+curl -H "grant_type: client_credentials" -H "Authorization: Basic $(echo -n d3a10db541914f98b892c31f9c2b54cb:d51a0c783d7a41b9860b30d447eb9b39 | base64)" https://accounts.spotify.com/api/token/
+
+
+Authorization: Basic ZDNhMTBkYjU0MTkxNGY5OGI4OTJjMzFmOWMyYjU0Y2I6ZDUxYTBjNzgzZDdhNDFiOTg2MGIzMGQ0NDdlYjliMzk=
+
+curl -X "POST" -d grant_type=client_credentials -H "Authorization: Basic ZDNhMTBkYjU0MTkxNGY5OGI4OTJjMzFmOWMyYjU0Y2I6ZDUxYTBjNzgzZDdhNDFiOTg2MGIzMGQ0NDdlYjliMzk=" https://accounts.spotify.com/api/token/
