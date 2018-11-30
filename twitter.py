@@ -60,21 +60,30 @@ def get_oauth():
                 resource_owner_secret=OAUTH_TOKEN_SECRET)
     return oauth
 
+def DiffChars(str1, str2):
+    tmp = []
+    for ch in str1:
+        if ch not in tmp:
+            tmp.append(ch)
+        else:
+            pass
+    return len(tmp)
+    
 def get_artist_twitter_id(name_to_look_for):
     """
     Get artist twitter ID (request) with string name as input
     """
     # Search request
     r2 = requests.get(url = 'https://api.twitter.com/1.1/users/search.json?q='+ name_to_look_for, auth=oauth)
-    r2 = r2.json()
+    r2 = r2.json()[0:2]
     artist_id = ''
     for result in r2:
         if result['verified'] == True:
             artist_id = result['id_str']
+            return artist_id, result['statuses_count']
         break
-    print(result)
-    print(result['listed_count'])
-    return artist_id, result['statuses_count']
+    return '',0
+    
 
 if __name__ == "__main__":
     if not OAUTH_TOKEN:
@@ -82,28 +91,32 @@ if __name__ == "__main__":
         print ("OAUTH_TOKEN: " + token)
         print ("OAUTH_TOKEN_SECRET: " + secret)
     else:
-        col_names = ['artiste', 'followers' , 'fav' , 'retweet', 'nbre tweet']
+        col_names = ['artiste','has_tweet', 'followers' , 'fav' , 'retweet', 'nbre tweet']
         results_df = pd.DataFrame(columns=col_names)
         oauth = get_oauth()
-        artists = ['rihanna', 'jain']
+        artists = pd.read_csv('Billboard/billboard_hot_200_2000-01.csv')[' Artist']
         for art in artists:
             artist_id, tweet_count = get_artist_twitter_id(art)
-            print(artist_id)
-            r = requests.get(url="https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=" + artist_id + "&count=200&include_rts=false", auth=oauth)
-            timeline = r.json()
-            print(len(timeline))
-            followers_number = timeline[0]['user']['followers_count']
-            tweet_total = 1
-            retweet_number = []
-            favorite_number = []
-            date = []
-            for tweet in timeline:
-                # About a post
-                date.append(tweet['created_at'])
-                retweet_number.append(tweet['retweet_count'])
-                favorite_number.append(tweet['favorite_count'])
-            retweet_total = sum(retweet_number)
-            favorite_total = sum(favorite_number)
-            art_results = pd.DataFrame([[str(art), followers_number, favorite_total, retweet_total, tweet_count]], columns=col_names)
+            if artist_id != '':
+                r = requests.get(url="https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=" + artist_id + "&count=200&include_rts=false", auth=oauth)
+                timeline = r.json()
+                followers_number = timeline[0]['user']['followers_count']
+                tweet_total = 1
+                retweet_number = []
+                favorite_number = []
+                date = []
+                for tweet in timeline:
+                    # About a post
+                    date.append(tweet['created_at'])
+                    retweet_number.append(tweet['retweet_count'])
+                    favorite_number.append(tweet['favorite_count'])
+                retweet_total = sum(retweet_number)
+                favorite_total = sum(favorite_number)
+                has_twitter_account = True
+                art_results = pd.DataFrame([[str(art), has_twitter_account, followers_number, favorite_total, retweet_total, tweet_count]], columns=col_names)
+            else:
+                art_results = pd.DataFrame([[str(art), False, 0, 0, 0, 0]], columns=col_names)
+
             results_df = results_df.append(art_results, ignore_index = True)
 
+    
