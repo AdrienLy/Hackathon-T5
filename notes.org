@@ -1,7 +1,7 @@
 
 * Thomas
   
-Spotify API
+Spotify API: https://developer.spotify.com/documentation/web-api/reference/tracks/
 
 * Margaux
 
@@ -17,7 +17,8 @@ Definition variable à expliquer
 
 * Olivier
   
-MusicBrainz
+- MusicBrainz https://musicbrainz.org/
+- etat de l'art
 
 * Adrien
 
