@@ -144,4 +144,7 @@ if __name__ == "__main__":
     df_concat2['fav moyen'] = df_concat2['fav'] / (df_concat2['nbre tweet'] + 1)
     df_concat2.plot(y = 'followers', x = 1, style = 'o')
     df_concat2.plot(y = 'nbre tweet', x = 1, style = 'o')
+    df_concat2.plot(y = 'retweet', x = 1, style = 'o')
     df_concat2 = df_concat2.loc[df_concat2['has_tweet'] == True]
+    df_concat2.plot(y = 'retweet', x = 1, style = 'o')
+    df_concat2.plot.bar(x= 1, y='has_tweet')
