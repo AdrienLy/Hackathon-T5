@@ -8,7 +8,7 @@ Spotify API
 Facebook API:
 - Graph API: https://developers.facebook.com/docs/graph-api
 - marketting API: https://developers.facebook.com/docs/marketing-apis 
-Twitter API: 
+Twitter API: https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
 Instagram API: https://developers.facebook.com/docs/instagram-api/reference/ 
 
 * Colin
