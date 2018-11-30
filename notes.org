@@ -25,3 +25,5 @@ Definition variable à expliquer
 Scrapper:
 - Billboard 200
 - Magazine de musique
+  
+Use the ~feedparser~ python module to fetch RSS feeds: https://www.pythonforbeginners.com/feedparser/using-feedparser-in-python
