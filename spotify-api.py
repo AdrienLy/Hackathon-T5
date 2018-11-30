@@ -53,10 +53,55 @@ def get_spotify_top_200_history():
     for date in dates:
         df = get_spotify_top_200_on_date(date)
         dfs.append(df)
-    return pd.concat(dfs)
+    new_df = pd.concat(dfs)
+    new_df.to_csv("billboard_spotify.csv")
+    return new_df
 
-df = get_spotify_top_200_history()
+def get_track_ids():
+    track_url_col = "Unnamed: 4"
+    _df = pd.read_csv("billboard_spotify.csv")
+    df = _df[_df[track_url_col] != "URL"]
+    track_df = df[track_url_col]
+    return track_df.str.replace('https://open.spotify.com/track/', '')
 
-# song_id = "3JIxjvbbDrA9ztYlNcp3yL"
-# r = get_audio_analysis(song_id)
-# print(r)
+def fetch_song_audio_features(token, df, start, end):
+    ids = df[start:end].to_csv(index=False).replace('\n', ',')[:-1]
+    r = requests.get(f"https://api.spotify.com/v1/audio-features/?ids={ids}"[:-1], headers={"Authorization": f"Bearer {token}"})
+    return r.json()["audio_features"]
+
+def make_audio_features_df(input_df):
+    token = get_spotify_token()
+    dfs = []
+    for r in input_df.index[0:15000:50]:
+        print(r)
+        input_df = get_track_ids()
+        a = fetch_song_audio_features(token, input_df, r, r+50)
+        partial_df = pd.DataFrame(a[:-1])
+        dfs.append(partial_df)
+    df = pd.concat(dfs)
+    df = df.reset_index()
+    df = df.drop(columns=['index'])
+    return df
+
+def fetch_tracks(token, df, start, end):
+    ids = df[start:end].to_csv(index=False).replace('\n', ',')[:-1]
+    r = requests.get(f"https://api.spotify.com/v1/tracks/?ids={ids}"[:-1], headers={"Authorization": f"Bearer {token}"})
+    return r.json()["tracks"]
+
+def make_tracks_df(input_df):
+    token = get_spotify_token()
+    dfs = []
+    for r in input_df.index[0:15000:50]:
+        print(r)
+        input_df = get_track_ids()
+        a = fetch_tracks(token, input_df, r, r+50)
+        partial_df = pd.DataFrame(a[:-1])
+        dfs.append(partial_df)
+    df = pd.concat(dfs)
+    df = df.reset_index()
+    df = df.drop(columns=['index'])
+    return df
+
+df = get_track_ids()
+#X_audio_features = make_audio_features_df(df)
+X_tracks = make_tracks_df(df)
