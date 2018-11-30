@@ -137,5 +137,11 @@ if __name__ == "__main__":
             results_df = results_df.append(art_results, ignore_index = True)
 
     y = pd.read_csv('top_artist_billboard_2015-2019', header = None )[1]
-    df_concat = pd.concat([results_df, y], axis = 1)    
+    df_concat = pd.concat([results_df, y], axis = 1)  
+    df_concat.to_csv('twitter_data.csv')
     
+    df_concat2 = df_concat.drop([0, 2], axis = 0)
+    df_concat2['fav moyen'] = df_concat2['fav'] / (df_concat2['nbre tweet'] + 1)
+    df_concat2.plot(y = 'followers', x = 1, style = 'o')
+    df_concat2.plot(y = 'nbre tweet', x = 1, style = 'o')
+    df_concat2 = df_concat2.loc[df_concat2['has_tweet'] == True]
