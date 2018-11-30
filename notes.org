@@ -1,0 +1,24 @@
+
+* Thomas
+  
+Spotify API
+
+* Margaux
+
+Facebook API: 
+Twitter API: 
+Instagram API: 
+
+* Colin
+  
+Definition variable à expliquer
+
+* Olivier
+  
+MusicBrainz
+
+* Adrien
+
+Scrapper:
+- Billboard 200
+- Magazine de musique

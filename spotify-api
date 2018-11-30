@@ -8,3 +8,13 @@ curl -H "grant_type: client_credentials" -H "Authorization: Basic $(echo -n d3a1
 Authorization: Basic ZDNhMTBkYjU0MTkxNGY5OGI4OTJjMzFmOWMyYjU0Y2I6ZDUxYTBjNzgzZDdhNDFiOTg2MGIzMGQ0NDdlYjliMzk=
 
 curl -X "POST" -d grant_type=client_credentials -H "Authorization: Basic ZDNhMTBkYjU0MTkxNGY5OGI4OTJjMzFmOWMyYjU0Y2I6ZDUxYTBjNzgzZDdhNDFiOTg2MGIzMGQ0NDdlYjliMzk=" https://accounts.spotify.com/api/token/
+
+POST https://accounts.spotify.com/api/token/
+grant_type: client_credentials
+Authorization: Basic ZDNhMTBkYjU0MTkxNGY5OGI4OTJjMzFmOWMyYjU0Y2I6ZDUxYTBjNzgzZDdhNDFiOTg2MGIzMGQ0NDdlYjliMzk=
+
+
+GET https://api.spotify.com/v1/audio-analysis/3JIxjvbbDrA9ztYlNcp3yL
+Authorization: Bearer BQBZetj-rUmzako3PW2sVrKDcqFQs1LN2ch6LkvXdQiIj0dHLB_rQwMH3aocl3Tnaah8zJIMB7xi9dBENGs
+
+curl -X GET "https://api.spotify.com/v1/audio-analysis/3JIxjvbbDrA9ztYlNcp3yL" -H "Authorization: Bearer BQBZetj-rUmzako3PW2sVrKDcqFQs1LN2ch6LkvXdQiIj0dHLB_rQwMH3aocl3Tnaah8zJIMB7xi9dBENGs"
