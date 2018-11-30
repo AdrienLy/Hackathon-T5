@@ -5,9 +5,11 @@ Spotify API
 
 * Margaux
 
-Facebook API: 
+Facebook API:
+- Graph API: https://developers.facebook.com/docs/graph-api
+- marketting API: https://developers.facebook.com/docs/marketing-apis 
 Twitter API: 
-Instagram API: 
+Instagram API: https://developers.facebook.com/docs/instagram-api/reference/ 
 
 * Colin
   
