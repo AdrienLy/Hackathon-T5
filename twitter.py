@@ -147,4 +147,24 @@ if __name__ == "__main__":
     df_concat2.plot(y = 'retweet', x = 1, style = 'o')
     df_concat2 = df_concat2.loc[df_concat2['has_tweet'] == True]
     df_concat2.plot(y = 'retweet', x = 1, style = 'o')
+    df_concat2.plot(y = 'tweet_freq', x = 1, style = 'o')
     df_concat2.plot.bar(x= 1, y='has_tweet')
+
+    # TO COPY PASTE INTO NOTEBOOK
+    import matplotlib.pyplot as plt
+    df_concat = pd.read_csv('twitter_data.csv')
+
+    df_concat2 = df_concat2.loc[df_concat2['has_tweet'] == True]
+    
+    plt.figure()
+    df_concat2.plot(y = 'retweet', x = 1, style = 'o')
+    plt.title('Nombre de mois dans le top 200 en fonction du nombre de retweets')
+
+    plt.figure()
+    df_concat2.plot(y = 'tweet_freq', x = 1, style = 'o')
+    plt.title('Nombre de mois dans le top 200 en fonction de la fréquence de tweet')
+
+    plt.figure()
+    df_concat2.plot(y = 'followers', x = 1, style = 'o')
+    plt.title('Nombre de mois dans le top 200 en fonction du nombre de followers')
+
