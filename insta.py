@@ -6,6 +6,7 @@ import requests
 import pandas as pd
 import numpy as np
 from bs4 import BeautifulSoup
+from multiprocessing import Pool
 
 header =   {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:62.0) Gecko/20100101 Firefox/62.0'}
 
@@ -26,11 +27,33 @@ def insta(pseudo):
         return float(df.loc['count', 'edge_followed_by']), float(df.loc['count', 'edge_owner_to_timeline_media'])
     return np.NaN, np.NaN
 
-# print(insta("beyonce"))
 
-df = pd.read_csv('chart_UK_top40_nospace.csv')
+
+
+
+
+df = pd.read_csv('top_artist_billboard_2010-2019')
 print(df.columns)
-df['Artistes'] = df['Artistes'].str.lower()
-df['followers'], df['posts'] = zip(*df['Artistes'].apply(lambda x: insta(x)))
-df.to_csv('follow.csv', sep=';', index=False)
-print(df)
+df['Artists'] = df['Artists'].str.replace(' ','')
+df['Artists'] = df['Artists'].str.lower()
+
+
+
+def test(df):
+    df['followers'], df['posts'] = zip(*df['Artists'].apply(lambda x: insta(x)))
+    return df
+
+#Split data
+df1 = df.iloc[0:602,:]
+df2 = df.iloc[602:1204,:]
+df3 = df.iloc[1204:1806,:]
+df4 = df.iloc[1806:,:]
+list = []
+list.append(df1)
+list.append(df2)
+list.append(df3)
+list.append(df4)
+p = Pool(4)
+df_r = pd.concat(p.map(test, list), axis=0, ignore_index=True)
+
+df_r.to_csv('followers_top_artist_billboard.csv', sep=';', index=False)
