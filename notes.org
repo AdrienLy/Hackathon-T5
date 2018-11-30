@@ -1,0 +1,64 @@
+
+* Thomas
+  
+Spotify API: https://developer.spotify.com/documentation/web-api/reference/tracks/
+
+* Margaux
+
+Facebook API:
+- Graph API: https://developers.facebook.com/docs/graph-api
+- marketting API: https://developers.facebook.com/docs/marketing-apis 
+Twitter API: https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
+Instagram API: https://developers.facebook.com/docs/instagram-api/reference/ 
+
+* Colin
+  
+Definition variable à expliquer
+
+* Olivier
+  
+- MusicBrainz: https://musicbrainz.org/
+- etat de l'art
+
+* Adrien
+
+Scrapper:
+- Billboard 200
+- Magazine de musique
+  
+Use the ~feedparser~ python module to fetch RSS feeds: https://www.pythonforbeginners.com/feedparser/using-feedparser-in-python
+
+
+* https://www.billboard.com/ scrapping
+
+** Track title
+
+#+begin_src javascript
+document.querySelectorAll(".chart-list-item__title-text").forEach(e=>console.log(e.innerText))
+#+end_src
+
+** Artist name
+
+
+#+begin_src javascript
+document.querySelectorAll(".chart-list-item__artist > a").forEach(e=>console.log(e.innerText))
+#+end_src
+
+
+** Last week
+
+#+begin_src javascript
+document.querySelectorAll(".chart-list-item__last-week").forEach(e=>console.log(e.innerText))
+#+end_src
+
+** Peak pos
+
+#+begin_src javascript
+document.querySelectorAll(".chart-list-item__weeks-at-one").forEach(e=>console.log(e.innerText))
+#+end_src
+
+** Weeks on chart
+
+#+begin_src javascript
+document.querySelectorAll(".chart-list-item__weeks-on-chart").forEach(e=>console.log(e.innerText))
+#+end_src
